@@ -1,0 +1,42 @@
+<h2>Suscriptores</h2>
+
+<% if @subscribers.empty? %>
+  <p class="empty">No hay suscriptores registrados aún.</p>
+<% else %>
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Correo</th>
+        <th>Teléfono</th>
+        <th>Último pago</th>
+        <th>Monto</th>
+        <th>Próximo pago</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @subscribers.each do |subscriber| %>
+        <tr>
+          <td><%= subscriber.name %></td>
+          <td><%= subscriber.email.presence || "—" %></td>
+          <td><%= subscriber.phone.presence || "—" %></td>
+          <td><%= subscriber.last_payment&.payment_date&.strftime("%d/%m/%Y") || "—" %></td>
+          <td><%= subscriber.last_payment ? number_to_currency(subscriber.last_payment.amount) : "—" %></td>
+          <td><%= subscriber.next_payment.strftime("%d/%m/%Y") %></td>
+          <td>
+            <span class="badge badge-<%= subscriber.status_color %>">
+              <%= subscriber.status_label %>
+            </span>
+          </td>
+          <td>
+            <%= link_to "Ver", subscriber, class: "btn" %>
+            <%= link_to "Editar", edit_subscriber_path(subscriber), class: "btn" %>
+            <%= link_to "Eliminar", subscriber, data: { turbo_method: :delete, turbo_confirm: "¿Eliminar este suscriptor?" }, class: "btn btn-danger" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

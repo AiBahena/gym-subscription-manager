@@ -1,0 +1,37 @@
+<%= form_with model: @subscriber do |f| %>
+  <% if @subscriber.errors.any? %>
+    <div class="errors">
+      <p><strong>Por favor corrige los siguientes errores:</strong></p>
+      <ul>
+        <% @subscriber.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name, "Nombre *" %>
+    <%= f.text_field :name, required: true, placeholder: "Nombre completo" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :email, "Correo electrónico" %>
+    <%= f.email_field :email, placeholder: "correo@ejemplo.com" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :phone, "Teléfono" %>
+    <%= f.telephone_field :phone, placeholder: "Ej. 81 1234 5678" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :next_payment, "Próximo pago *" %>
+    <%= f.date_field :next_payment, required: true %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit class: "btn btn-primary" %>
+    <%= link_to "Cancelar", subscribers_path, class: "btn" %>
+  </div>
+<% end %>

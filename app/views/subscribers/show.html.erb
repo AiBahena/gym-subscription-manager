@@ -1,0 +1,71 @@
+<div class="subscriber-header">
+  <h2><%= @subscriber.name %></h2>
+  <span class="badge badge-<%= @subscriber.status_color %>">
+    <%= @subscriber.status_label %>
+  </span>
+</div>
+
+<div class="subscriber-info">
+  <p><strong>Correo:</strong> <%= @subscriber.email.presence || "—" %></p>
+  <p><strong>Teléfono:</strong> <%= @subscriber.phone.presence || "—" %></p>
+  <p><strong>Próximo pago:</strong> <%= @subscriber.next_payment.strftime("%d/%m/%Y") %></p>
+  <p><strong>Último monto pagado:</strong>
+    <%= @subscriber.last_payment ? number_to_currency(@subscriber.last_payment.amount) : "—" %>
+  </p>
+</div>
+
+<div class="card">
+  <h3>Registrar nuevo pago</h3>
+  <%= form_with model: [@subscriber, @new_payment] do |f| %>
+    <div class="field">
+      <%= f.label :payment_date, "Fecha de pago" %>
+      <%= f.date_field :payment_date, value: Date.today, required: true %>
+    </div>
+    <div class="field">
+      <%= f.label :amount, "Monto" %>
+      <%= f.number_field :amount, step: 0.01, min: 0.01, required: true, placeholder: "0.00" %>
+    </div>
+    <div class="field">
+      <%= f.label :notes, "Notas (opcional)" %>
+      <%= f.text_field :notes, placeholder: "Ej. Pago con transferencia" %>
+    </div>
+    <%= f.submit "Registrar pago", class: "btn btn-primary" %>
+  <% end %>
+</div>
+
+<div class="card">
+  <h3>Historial de pagos</h3>
+  <% if @payments.empty? %>
+    <p class="empty">Sin pagos registrados.</p>
+  <% else %>
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Monto</th>
+          <th>Notas</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @payments.each do |payment| %>
+          <tr>
+            <td><%= payment.payment_date.strftime("%d/%m/%Y") %></td>
+            <td><%= number_to_currency(payment.amount) %></td>
+            <td><%= payment.notes.presence || "—" %></td>
+            <td>
+              <%= link_to "Eliminar", subscriber_payment_path(@subscriber, payment),
+                  data: { turbo_method: :delete, turbo_confirm: "¿Eliminar este pago?" },
+                  class: "btn btn-danger btn-sm" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</div>
+
+<div class="actions">
+  <%= link_to "Editar suscriptor", edit_subscriber_path(@subscriber), class: "btn" %>
+  <%= link_to "Volver a la lista", subscribers_path, class: "btn" %>
+</div>

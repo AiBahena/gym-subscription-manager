@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Gestión de Suscripciones</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "application" %>
+  </head>
+  <body>
+    <nav>
+      <h1>🏋 BRAWLERS</h1>
+      <%= link_to "Lista de suscriptores", root_path %>
+      <%= link_to "Nuevo suscriptor", new_subscriber_path %>
+    </nav>
+
+    <main>
+      <% if notice %>
+        <p class="flash notice"><%= notice %></p>
+      <% end %>
+      <% if alert %>
+        <p class="flash alert"><%= alert %></p>
+      <% end %>
+
+      <%= yield %>
+    </main>
+  </body>
+</html>
